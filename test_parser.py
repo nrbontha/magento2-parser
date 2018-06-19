@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import pandas as pd
+from parser import parse_df
 
 if __name__ == "__main__":
 
