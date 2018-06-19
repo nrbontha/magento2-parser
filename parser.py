@@ -24,6 +24,7 @@ def parse_attr(row):
     return parsed
 
 
+@click.command()
 @click.argument('df_path')
 @click.argument('col')
 @click.argument('id')
