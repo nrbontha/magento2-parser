@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import click
 import pandas as pd
 
 def parse_attr(row):
@@ -22,15 +23,19 @@ def parse_attr(row):
 
     return parsed
 
-def parse_df(df, col, id):
+
+@click.argument('df_path')
+@click.argument('col')
+@click.argument('id')
+def main(df_path, col, id):
     """
     Format pd.DataFrame with parsed attributes in 
     separate columns.
 
     Parameters
     ----------
-    df : pd.DataFrame
-        Raw data with attributes col
+    df_path : file path
+        Path to raw data
     col : str
         Attributes col name
     id : str
@@ -41,6 +46,8 @@ def parse_df(df, col, id):
     pd.DataFrame
 
     """
+    df = pd.read_csv(df_path)
+
     attrs = []
 
     for index, row in df.iterrows():
@@ -51,3 +58,6 @@ def parse_df(df, col, id):
            
     return pd.merge(df, pd.DataFrame(attrs), how='left', on=id)
 
+
+if __name__ == "__main__":
+    main()
