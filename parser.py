@@ -23,20 +23,15 @@ def parse_attr(row):
 
     return parsed
 
-
-@click.command()
-@click.argument('df_path')
-@click.argument('col')
-@click.argument('id')
-def main(df_path, col, id):
+def parse_df(df, col, id):
     """
     Format pd.DataFrame with parsed attributes in 
     separate columns.
 
     Parameters
     ----------
-    df_path : file path
-        Path to raw data
+    df : pd.DataFrame
+        Raw data with attributes col
     col : str
         Attributes col name
     id : str
@@ -47,8 +42,6 @@ def main(df_path, col, id):
     pd.DataFrame
 
     """
-    df = pd.read_csv(df_path)
-
     attrs = []
 
     for index, row in df.iterrows():
@@ -59,6 +52,25 @@ def main(df_path, col, id):
            
     return pd.merge(df, pd.DataFrame(attrs), how='left', on=id)
 
+
+@click.command()
+@click.argument('file_path')
+@click.argument('col')
+@click.argument('id')
+@click.option(
+    '-e', '--export_path', 
+    help='File export path.'
+)
+def main(file_path, col, id, export_path):
+    """Format items.csv file with parsed attributes."""
+    df = pd.read_csv(file_path)
+    output = parse_df(df, col, id)
+
+    if export_path:
+        output.to_csv(export_path, index=False)
+    else:
+        output.to_csv(file_path, index=False)
+    
 
 if __name__ == "__main__":
     main()
