@@ -45,7 +45,7 @@ def parse_df(df, col, id):
     attrs = []
 
     for index, row in df.iterrows():
-        if pd.notna(row[col]):
+        if pd.notnull(row[col]):
             row_attrs = parse_attr(row[col])
             row_attrs[id] = row[id]
             attrs.append(row_attrs)
@@ -74,3 +74,4 @@ def main(file_path, col, id, export_path):
 
 if __name__ == "__main__":
     main()
+
