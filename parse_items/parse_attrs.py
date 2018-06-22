@@ -2,25 +2,27 @@
 
 import click
 import pandas as pd
+import numpy as np
 from helpers import *
 
-def parse_attrs(row):
+def parse_row(row):
     """
     Parse attributes row.
 
-    >>> parse_attr("Cup:F|Band:28|Color:BLACK")
+    >>> parse_row("Cup:F|Band:28|Color:BLACK")
     {'Cup': 'F', 'Band': 28, 'Color': 'BLACK'}
 
     """
     parsed = {}
     
-    for string in row.split("|"):
-        parsed[string.split(':')[0]] = string.split(':')[1]  
+    if pd.notnull(row):
+        for string in row.split("|"):
+            parsed[string.split(':')[0]] = string.split(':')[1]
 
-    return parsed
+    return parsed if parsed else np.nan
 
 
-def format_attrs(df, col, id):
+def format_df(df, col, id):
     """
     Format pd.DataFrame with parsed attributes in 
     new columns.
@@ -41,10 +43,9 @@ def format_attrs(df, col, id):
     """
     attrs = []
 
-    #TODO: refactor with apply function
     for index, row in df.iterrows():
         if pd.notnull(row[col]):
-            row_attrs = parse_attrs(row[col])
+            row_attrs = parse_row(row[col])
             row_attrs[id] = row[id]
             attrs.append(row_attrs)
 
@@ -62,7 +63,7 @@ def format_attrs(df, col, id):
 def main(file_path, col, id, export_path):
     """Format items.csv file with parsed attributes."""
     df = pd.read_csv(file_path)
-    output = format_attrs(df, col, id)
+    output = format_df(df, col, id)
 
     if export_path:
         output.to_csv(export_path, index=False)

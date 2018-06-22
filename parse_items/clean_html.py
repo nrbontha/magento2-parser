@@ -2,15 +2,16 @@
 
 import click
 import pandas as pd
+import numpy as np
 from bs4 import BeautifulSoup
 from helpers import *
 
-def clean_html(row, markup_type='lxml'):
+def clean_row(row, markup_type='lxml'):
     """
     Clean and format HTML-encoded description
     strings for Magento pages.
 
-    >>> format_html("<p>Product</p>&#013;&#013;&#010;<ul>'<li>Description</li>")
+    >>> clean_row("<p>Product</p>&#013;&#013;&#010;<ul>'<li>Description</li>")
     "Product<br/>'Description"
 
     """
@@ -23,9 +24,9 @@ def clean_html(row, markup_type='lxml'):
         if '\n' or '\r' in output:
             output = replace_pattern(output, '[\r\n]', '<br/>')
 
-    return output
+    return output if output else np.nan 
 
-def format_html(df, col):
+def format_df(df, col):
     """
     Format pd.DataFrame HTML-encoded column.
 
@@ -41,7 +42,7 @@ def format_html(df, col):
     pd.DataFrame
 
     """
-    df[col] = df[col].apply(clean_html)
+    df[col] = df[col].apply(clean_row)
 
     return df
 
@@ -56,7 +57,7 @@ def format_html(df, col):
 def main(file_path, col, export_path):
     """Format items.csv file with parsed attributes."""
     df = pd.read_csv(file_path)
-    output = format_html(df, col)
+    output = format_df(df, col)
 
     if export_path:
         output.to_csv(export_path, index=False)
