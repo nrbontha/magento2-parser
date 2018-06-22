@@ -2,17 +2,13 @@
 
 import click
 import pandas as pd
+from helpers import *
 
-def parse_attr(row):
+def parse_attrs(row):
     """
     Parse attributes row.
 
-    Parameters
-    ----------
-    row : str
-        Attribute value
-    
-    >>> row = "Cup:F|Band:28|Color:BLACK"
+    >>> parse_attr("Cup:F|Band:28|Color:BLACK")
     {'Cup': 'F', 'Band': 28, 'Color': 'BLACK'}
 
     """
@@ -23,10 +19,11 @@ def parse_attr(row):
 
     return parsed
 
-def parse_df(df, col, id):
+
+def format_attrs(df, col, id):
     """
     Format pd.DataFrame with parsed attributes in 
-    separate columns.
+    new columns.
 
     Parameters
     ----------
@@ -44,12 +41,13 @@ def parse_df(df, col, id):
     """
     attrs = []
 
+    #TODO: refactor with apply function
     for index, row in df.iterrows():
         if pd.notnull(row[col]):
-            row_attrs = parse_attr(row[col])
+            row_attrs = parse_attrs(row[col])
             row_attrs[id] = row[id]
             attrs.append(row_attrs)
-           
+
     return pd.merge(df, pd.DataFrame(attrs), how='left', on=id)
 
 
@@ -64,7 +62,7 @@ def parse_df(df, col, id):
 def main(file_path, col, id, export_path):
     """Format items.csv file with parsed attributes."""
     df = pd.read_csv(file_path)
-    output = parse_df(df, col, id)
+    output = format_attrs(df, col, id)
 
     if export_path:
         output.to_csv(export_path, index=False)
@@ -74,4 +72,3 @@ def main(file_path, col, id, export_path):
 
 if __name__ == "__main__":
     main()
-
