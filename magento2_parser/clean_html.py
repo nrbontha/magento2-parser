@@ -55,7 +55,7 @@ def format_df(df, col):
     help='File export path.'
 )
 def main(file_path, col, export_path):
-    """Format items.csv file with parsed attributes."""
+    """Format items.csv file with formatted HTML."""
     df = pd.read_csv(file_path)
     output = format_df(df, col)
 
