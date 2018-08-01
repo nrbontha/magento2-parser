@@ -22,8 +22,8 @@ def replace_pattern(string, pattern, replace):
 
 def clean_row(row, markup_type='lxml'):
     """
-    Clean and format HTML-encoded description
-    strings for Magento pages.
+    Clean and format HTML-encoded description strings for Magento
+    pages.
 
     >>> clean_row("<p>Product</p>&#013;&#013;&#010;<ul>'<li>Description</li>")
     "Product<br/>'Description"

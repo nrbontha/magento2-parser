@@ -3,7 +3,6 @@
 import click
 import pandas as pd
 import numpy as np
-from helpers import *
 
 def parse_row(row):
     """
@@ -24,8 +23,7 @@ def parse_row(row):
 
 def format_df(df, col, id):
     """
-    Format pd.DataFrame with parsed attributes in 
-    new columns.
+    Format pd.DataFrame with parsed attributes in new columns.
 
     Parameters
     ----------
