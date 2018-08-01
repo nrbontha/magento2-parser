@@ -4,7 +4,21 @@ import click
 import pandas as pd
 import numpy as np
 from bs4 import BeautifulSoup
-from helpers import *
+
+def dedupe_pattern(string, pattern):
+    if pattern*2 in string:
+        return dedupe_pattern(string.replace(pattern*2, pattern), pattern)
+    return string
+
+def replace_pattern(string, pattern, replace):
+    """
+    Helper function to replace escape characters with equivalent
+    HMTL formatting. 
+    """
+    output = re.sub(pattern, replace, string)
+    if replace*2 in output:    
+        output = dedupe_pattern(output, replace)
+    return output
 
 def clean_row(row, markup_type='lxml'):
     """
